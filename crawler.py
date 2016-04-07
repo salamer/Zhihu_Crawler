@@ -31,7 +31,7 @@ class Zhihu_Crawler():
         self.url=url
         self.header={}
         self.header["User-Agent"]="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0"
-        self.header["Host"]="www.zhihu.com"
+#        self.header["Host"]="www.zhihu.com"
         self.header["Referer"]="www.zhihu.com"
 
 
