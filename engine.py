@@ -22,15 +22,18 @@ def check_url(url):
 
 
 if __name__=="__main__":
-    start=time()
+    start=time.time()
     count=0
 
 
-    option=sys.argv[1][2:]
+    try:
+        option=sys.argv[1]
+    except:
+        option=''
     if "mongo" not in option:
         option="print_data_out"
     i=0
-    red.lpush("url_queue","https://www.zhihu.com/people/gaoming623")
+    red.lpush("url_queue","https://www.zhihu.com/people/gaoming623/followees")
     url=red.lpop("url_queue")
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     while(True):
@@ -48,15 +51,14 @@ if __name__=="__main__":
                 url_list.append(url.replace("https","http"))
                 count+=1
 
-        if url_list[0]=='':
+        if not url_list:
             break
 
-        pool=gevent.Pool(10)
+        pool=gevent.pool.Pool(10)
 
         for url in url_list:
-            if url:
-                pool.spawn(crawler.Zhihu_Crawler,url,option)
+            pool.spawn(crawler.Zhihu_Crawler,url,option)
 
         pool.join()
 
-    print "crawler has crawled %d people ,it cost %s" % (count,time()-start)
+    print "crawler has crawled %d people ,it cost %s" % (count,time.time()-start)
