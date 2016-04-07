@@ -21,12 +21,13 @@ class Zhihu_Crawler():
 
     '''
 
-    def __init__(self,url):
+    def __init__(self,url,option="print_data_out"):
         '''
         initialize the crawler
 
         '''
 
+        self.option=option
         self.url=url
         self.header={}
         self.header["User-Agent"]="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0"
@@ -62,7 +63,7 @@ class Zhihu_Crawler():
         else:
             return ''
 
-    def parse_user_profile(self,html_source,callback="print_data_out"):
+    def parse_user_profile(self,html_source):
         '''
         parse the user's profile to mongo
         '''
@@ -105,7 +106,7 @@ class Zhihu_Crawler():
         self.user_info=self.process_xpath_source(tree.xpath("//span[@class='bio']/@title"))
         self.user_intro=self.process_xpath_source(tree.xpath("//span[@class='content']/text()"))
 
-        if callback=="print_data_out":
+        if self.option=="print_data_out":
             self.print_data_out()
         else:
             self.store_data_to_mongo()

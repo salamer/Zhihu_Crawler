@@ -4,7 +4,10 @@
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
+import gevent.monkey
+gevent.monkey.patch_socket()
 
+import gevent
 import redis
 import crawler
 
@@ -18,6 +21,9 @@ def check_url(url):
 
 
 if __name__=="__main__":
+    option=sys.argv[1][2:]
+    if option!="mongo":
+        option="print_data_out"
     i=0
     red.lpush("url_queue","https://www.zhihu.com/people/gaoming623")
     url=red.lpop("url_queue")
@@ -25,7 +31,7 @@ if __name__=="__main__":
         i=i+1
         url=url+'/followees'
         url.replace("https","http")
-        new_crawler=crawler.Zhihu_Crawler(url)
+        new_crawler=crawler.Zhihu_Crawler(url,option=option)
         new_crawler.send_request()
         if (i==100):
             break
