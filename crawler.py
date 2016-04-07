@@ -45,7 +45,10 @@ class Zhihu_Crawler():
                 "d_c0":'"AHAA9ozGuwmPToJX_XSZ7l2aeKFKaTKYt80=|1460000226"',
                 "cap_id":'"MDk0MzBlNWU1YzliNDkzY2E4MDdjMDcxZmU1NDI3MjY=|1460000159|857d62637fceb8ffb8adaceaefad405c44be2054"'}
 
-    def send_request(self,callback=None):
+        self.send_request
+
+
+    def send_request(self):
         '''
         send a request to get HTML source
 

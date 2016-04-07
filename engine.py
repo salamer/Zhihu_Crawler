@@ -22,17 +22,33 @@ def check_url(url):
 
 if __name__=="__main__":
     option=sys.argv[1][2:]
-    if option!="mongo":
+    if "mongo" not in option:
         option="print_data_out"
     i=0
     red.lpush("url_queue","https://www.zhihu.com/people/gaoming623")
     url=red.lpop("url_queue")
-    while(url):
+    new_crawler=crawler.Zhihu_Crawler(url,option=option)
+    while(True):
         i=i+1
-        url=url+'/followees'
-        url.replace("https","http")
-        new_crawler=crawler.Zhihu_Crawler(url,option=option)
-        new_crawler.send_request()
         if (i==100):
             break
-        url=red.lpop("url_queue")
+
+        url_list=[]
+
+        for i in range(10):
+
+            url=red.lpop("url_queue")
+            if url:
+                url=url+"/followees"
+                url_list.append(url.replace("https","http"))
+
+        if url_list[0]=='':
+            break
+
+        pool=gevent.Pool(10)
+
+        for url in url_list:
+            if url:
+                pool.spawn(crawler.Zhihu_Crawler,url,option)
+
+        pool.join()
