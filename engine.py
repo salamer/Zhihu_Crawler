@@ -38,12 +38,12 @@ if __name__=="__main__":
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     while(True):
         i=i+1
-        if (i==100):
+        if (i==5000000):
             break
 
         url_list=[]
 
-        for i in range(10):
+        for i in range(100):
 
             url=red.lpop("url_queue")
             if url:
