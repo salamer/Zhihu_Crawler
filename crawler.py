@@ -57,8 +57,8 @@ class Zhihu_Crawler():
         r=requests.get(self.url,cookies=self.cookies,headers=self.header,verify=False)
         content=r.text
 
-
-        self.parse_user_profile(content)
+        if r.status_code==200:
+            self.parse_user_profile(content)
 
     def process_xpath_source(self,source):
         if source:
