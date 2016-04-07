@@ -54,11 +54,10 @@ if __name__=="__main__":
         if not url_list:
             break
 
-        pool=gevent.pool.Pool(10)
-
+        slaver=[]
         for url in url_list:
-            pool.spawn(crawler.Zhihu_Crawler,url,option)
+            slaver.append(gevent.spawn(crawler.Zhihu_Crawler,url,option))
 
-        pool.join()
+        gevent.joinall(slaver)
 
     print "crawler has crawled %d people ,it cost %s" % (count,time.time()-start)
