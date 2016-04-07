@@ -10,6 +10,7 @@ gevent.monkey.patch_socket()
 import gevent
 import redis
 import crawler
+import time
 
 #connect to redis server
 red=redis.Redis(host='localhost', port=6379, db=1)
@@ -21,6 +22,10 @@ def check_url(url):
 
 
 if __name__=="__main__":
+    start=time()
+    count=0
+
+
     option=sys.argv[1][2:]
     if "mongo" not in option:
         option="print_data_out"
@@ -41,6 +46,7 @@ if __name__=="__main__":
             if url:
                 url=url+"/followees"
                 url_list.append(url.replace("https","http"))
+                count+=1
 
         if url_list[0]=='':
             break
@@ -52,3 +58,5 @@ if __name__=="__main__":
                 pool.spawn(crawler.Zhihu_Crawler,url,option)
 
         pool.join()
+
+    print "crawler has crawled %d people ,it cost %s" % (count,time()-start)
