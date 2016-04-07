@@ -22,9 +22,16 @@ def check_url(url):
 
 
 if __name__=="__main__":
+
+    '''
+    start the crawler
+
+    '''
+
     start=time.time()
     count=0
 
+    #choose the running way of using database or not
 
     try:
         option=sys.argv[1]
@@ -33,7 +40,10 @@ if __name__=="__main__":
     if "mongo" not in option:
         option="print_data_out"
     i=0
-    red.lpush("url_queue","https://www.zhihu.com/people/gaoming623/followees")
+
+    #the start page
+
+    red.lpush("url_queue","https://www.zhihu.com/people/shi-wei-hu-bu-gui/followees")
     url=red.lpop("url_queue")
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     while(True):
@@ -43,7 +53,7 @@ if __name__=="__main__":
 
         url_list=[]
 
-        for i in range(100):
+        for i in range(600):
 
             url=red.lpop("url_queue")
             if url:
@@ -53,6 +63,8 @@ if __name__=="__main__":
 
         if not url_list:
             break
+
+        #use gevent for asyn way crawling
 
         slaver=[]
         for url in url_list:
