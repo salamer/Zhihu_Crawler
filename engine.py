@@ -20,6 +20,11 @@ def check_url(url):
     if red.sadd("url_crawled",url):
         red.lpush("url_queue",url)
 
+def create_new_slave(url,option):
+    new_salve=crawler.Zhihu_Crawler(url,option)
+    new.send_request()
+    return "ok"
+
 
 if __name__=="__main__":
 
@@ -43,7 +48,7 @@ if __name__=="__main__":
 
     #the start page
 
-    red.lpush("url_queue","https://www.zhihu.com/people/shi-wei-hu-bu-gui/followees")
+    red.lpush("url_queue","https://www.zhihu.com/people/gaoming623/followees")
     url=red.lpop("url_queue")
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     while(True):
@@ -53,7 +58,7 @@ if __name__=="__main__":
 
         url_list=[]
 
-        for i in range(600):
+        for i in range(200):
 
             url=red.lpop("url_queue")
             if url:
@@ -68,7 +73,7 @@ if __name__=="__main__":
 
         slaver=[]
         for url in url_list:
-            slaver.append(gevent.spawn(crawler.Zhihu_Crawler,url,option))
+            slaver.append(gevent.spawn(create_new_slave,url,option))
 
         gevent.joinall(slaver)
 
