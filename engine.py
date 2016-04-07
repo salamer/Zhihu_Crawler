@@ -19,10 +19,13 @@ def check_url(url):
 
 if __main__=="__name__":
     i=0
-    red.lpush("url_queue","")
-    while(url=red.lpop("url_queue")):
+    red.lpush("url_queue","https://www.zhihu.com/people/gaoming623")
+    url=red.lpop("url_queue")
+    while(url):
         i=i+1
+        url=url+'/followees'
         new_crawler=Zhihu_Crawler(url)
         new_crawler.send_request()
         if (i==100):
             break
+        url=red.lpop("url_queue")
