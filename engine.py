@@ -24,6 +24,7 @@ if __name__=="__main__":
     while(url):
         i=i+1
         url=url+'/followees'
+        url.replace("https","http")
         new_crawler=crawler.Zhihu_Crawler(url)
         new_crawler.send_request()
         if (i==100):

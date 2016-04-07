@@ -8,6 +8,9 @@ import requests
 from lxml import html
 from db import Zhihu_User_Profile
 from engine import check_url
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 
@@ -47,7 +50,7 @@ class Zhihu_Crawler():
 
         '''
 
-        r=requests.get(self.url,cookies=self.cookies,headers=self.header)
+        r=requests.get(self.url,cookies=self.cookies,headers=self.header,verify=False)
         content=r.text
 
 
