@@ -6,7 +6,7 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 import gevent.monkey
-gevent.monkey.patch_socket()
+gevent.monkey.patch_all()
 
 import requests
 from lxml import html

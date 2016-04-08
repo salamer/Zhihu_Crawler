@@ -5,7 +5,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 import gevent.monkey
-gevent.monkey.patch_socket()
+gevent.monkey.patch_all()
 
 import gevent
 import redis
@@ -17,7 +17,7 @@ red=redis.Redis(host='localhost', port=6379, db=1)
 
 
 def re_crawl_url(url):
-    red.push("new_the_url_queue",url)
+    red.lpush("new_the_url_queue",url)
 
 def check_url(url):
     if red.sadd("new_url_has_crawled",url):
@@ -52,8 +52,8 @@ if __name__=="__main__":
 
     #the start page
 
-    red.lpush("the_url_queue","https://www.zhihu.com/people/gaoming623/followees")
-    url=red.lpop("the_url_queue")
+    red.lpush("new_the_url_queue","https://www.zhihu.com/people/gaoming623/followees")
+    url=red.lpop("new_the_url_queue")
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     new_crawler.send_request()
     while(True):
@@ -61,7 +61,7 @@ if __name__=="__main__":
         url_list=[]
 
         for i in range(200):
-            url=red.lpop("the_url_queue")
+            url=red.lpop("new_the_url_queue")
             if url:
                 url_list.append(url)
                 count+=1
