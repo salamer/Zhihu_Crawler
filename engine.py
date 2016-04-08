@@ -16,10 +16,14 @@ import time
 red=redis.Redis(host='localhost', port=6379, db=1)
 
 
-def check_url(url):
-    if red.sadd("url_has_crawled",url):
-        red.lpush("the_url_queue",url)
+def re_crawl_url(url):
+    red.push("new_the_url_queue",url)
 
+def check_url(url):
+    if red.sadd("new_url_has_crawled",url):
+        red.lpush("new_the_url_queue",url)
+
+#wrap the class method
 def create_new_slave(url,option):
     new_slave=crawler.Zhihu_Crawler(url,option)
     new_slave.send_request()
@@ -53,18 +57,13 @@ if __name__=="__main__":
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     new_crawler.send_request()
     while(True):
-        i=i+1
-        if (i==5000000):
-            break
 
         url_list=[]
 
         for i in range(200):
-
             url=red.lpop("the_url_queue")
             if url:
-                url=url+"/followees"
-                url_list.append(url.replace("https","http"))
+                url_list.append(url)
                 count+=1
 
         if not url_list:

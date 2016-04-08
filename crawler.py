@@ -4,10 +4,14 @@
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
+
+import gevent.monkey
+gevent.monkey.patch_socket()
+
 import requests
 from lxml import html
 from db import Zhihu_User_Profile
-from engine import check_url
+from engine import check_url,re_crawl_url
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -50,8 +54,12 @@ class Zhihu_Crawler():
         send a request to get HTML source
 
         '''
+        try:
+            r=requests.get(self.url,cookies=self.cookies,headers=self.header,verify=False)
+        except requests.exceptions.ConnectionError as e:
+            re_crawl_url(self.url)
+            pass
 
-        r=requests.get(self.url,cookies=self.cookies,headers=self.header,verify=False)
         content=r.text
 
         if r.status_code==200:
@@ -114,6 +122,8 @@ class Zhihu_Crawler():
         #find the follower's url
         url_list=tree.xpath("//h2[@class='zm-list-content-title']/a/@href")
         for target_url in url_list:
+            target_url=target_url.replace("https","http")
+            target_url=target_url+"/followees"
             check_url(target_url)
 
     def print_data_out(self):
@@ -131,6 +141,7 @@ class Zhihu_Crawler():
         print "关注了:%s\n" % self.user_followees
         print "工作:%s/%s" % (self.user_employment,self.user_employment_extra)
         print "教育:%s/%s" % (self.user_education_school,self.user_education_subject)
+        print "用户信息:%s" % self.user.info
         print "*"*60
 
     def store_data_to_mongo(self):
@@ -151,6 +162,7 @@ class Zhihu_Crawler():
             user_gender=self.user_gender,
             user_info=self.user_info,
             user_intro=self.user_intro,
+            user_url=self.url
         )
         new_profile.save()
         print "saved:%s \n" % self.user_name

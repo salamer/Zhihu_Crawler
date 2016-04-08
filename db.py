@@ -7,7 +7,7 @@ sys.setdefaultencoding("utf-8")
 
 import mongoengine
 
-mongoengine.connect('zhihu_data')
+mongoengine.connect('new_my_zhihu_data')
 
 class Zhihu_User_Profile(mongoengine.Document):
     user_name=mongoengine.StringField()
@@ -23,3 +23,4 @@ class Zhihu_User_Profile(mongoengine.Document):
     user_gender=mongoengine.StringField()
     user_info=mongoengine.StringField()
     user_intro=mongoengine.StringField()
+    user_url=mongoengine.StringField()
