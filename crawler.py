@@ -54,11 +54,12 @@ class Zhihu_Crawler():
         send a request to get HTML source
 
         '''
+        added_followee_url=self.url+"/followees"
         try:
-            r=requests.get(self.url,cookies=self.cookies,headers=self.header,verify=False)
+            r=requests.get(added_followee_url,cookies=self.cookies,headers=self.header,verify=False)
         except requests.exceptions.ConnectionError as e:
             re_crawl_url(self.url)
-            pass
+            return
 
         content=r.text
 
@@ -123,7 +124,6 @@ class Zhihu_Crawler():
         url_list=tree.xpath("//h2[@class='zm-list-content-title']/a/@href")
         for target_url in url_list:
             target_url=target_url.replace("https","http")
-            target_url=target_url+"/followees"
             check_url(target_url)
 
     def print_data_out(self):

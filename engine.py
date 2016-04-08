@@ -12,16 +12,22 @@ import redis
 import crawler
 import time
 
+
+red_queue="new_the_url_queue"
+red_crawled_set="new_url_has_crawled"
+
+
+
 #connect to redis server
 red=redis.Redis(host='localhost', port=6379, db=1)
 
 
 def re_crawl_url(url):
-    red.lpush("new_the_url_queue",url)
+    red.lpush(red_queue,url)
 
 def check_url(url):
-    if red.sadd("new_url_has_crawled",url):
-        red.lpush("new_the_url_queue",url)
+    if red.sadd(red_crawled_set,url):
+        red.lpush(red_queue,url)
 
 #wrap the class method
 def create_new_slave(url,option):
@@ -52,16 +58,16 @@ if __name__=="__main__":
 
     #the start page
 
-    red.lpush("new_the_url_queue","https://www.zhihu.com/people/gaoming623/followees")
-    url=red.lpop("new_the_url_queue")
+    red.lpush(red_queue,"https://www.zhihu.com/people/gaoming623")
+    url=red.lpop(red_queue)
     new_crawler=crawler.Zhihu_Crawler(url,option=option)
     new_crawler.send_request()
     while(True):
 
         url_list=[]
 
-        for i in range(200):
-            url=red.lpop("new_the_url_queue")
+        for i in range(50):
+            url=red.lpop(red_queue)
             if url:
                 url_list.append(url)
                 count+=1

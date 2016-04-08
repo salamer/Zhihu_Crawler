@@ -31,7 +31,7 @@ urls=[
     'http://v2ex.com'
 
 ]
-'''
+
 for url in urls:
     pool.spawn(h,url,3)
 
@@ -41,6 +41,7 @@ jobs=[]
 for url in urls:
     jobs.append(gevent.spawn(h,url,1))
 gevent.joinall(jobs)
+'''
 '''
 import sys
 if 'mongo' in sys.argv[1]:
