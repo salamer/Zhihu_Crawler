@@ -57,11 +57,13 @@ class Zhihu_Crawler():
         added_followee_url=self.url+"/followees"
         try:
             r=requests.get(added_followee_url,cookies=self.cookies,headers=self.header,verify=False)
-        except requests.exceptions.ConnectionError as e:
+        except:
             re_crawl_url(self.url)
             return
 
         content=r.text
+
+        print added_followee_url
 
         if r.status_code==200:
             self.parse_user_profile(content)
@@ -141,7 +143,7 @@ class Zhihu_Crawler():
         print "关注了:%s\n" % self.user_followees
         print "工作:%s/%s" % (self.user_employment,self.user_employment_extra)
         print "教育:%s/%s" % (self.user_education_school,self.user_education_subject)
-        print "用户信息:%s" % self.user.info
+        print "用户信息:%s" % self.user_info
         print "*"*60
 
     def store_data_to_mongo(self):

@@ -11,10 +11,13 @@ import gevent
 import redis
 import crawler
 import time
+from multiprocessing.dummy import Pool
 
 
-red_queue="new_the_url_queue"
-red_crawled_set="new_url_has_crawled"
+red_queue="test_the_url_queue"
+red_crawled_set="test_url_has_crawled"
+
+process_pool=Pool(2)
 
 
 
@@ -34,6 +37,20 @@ def create_new_slave(url,option):
     new_slave=crawler.Zhihu_Crawler(url,option)
     new_slave.send_request()
     return "ok"
+
+def gevent_worker(option):
+    while True:
+        url=red.lpop(red_queue)
+        if not url:
+            break
+        create_new_slave(url,option)
+
+def process_worker(option):
+    jobs=[]
+    for i in range(10):
+        jobs.append(gevent.spawn(gevent_worker,option))
+    gevent.joinall()
+
 
 
 if __name__=="__main__":
@@ -60,8 +77,14 @@ if __name__=="__main__":
 
     red.lpush(red_queue,"https://www.zhihu.com/people/gaoming623")
     url=red.lpop(red_queue)
-    new_crawler=crawler.Zhihu_Crawler(url,option=option)
-    new_crawler.send_request()
+    create_new_slave(url,option=option)
+
+
+    process_pool.map_async(process_worker,option)
+    process_pool.close()
+    process_pool.join()
+
+    '''
     while(True):
 
         url_list=[]
@@ -82,5 +105,6 @@ if __name__=="__main__":
             slaver.append(gevent.spawn(create_new_slave,url,option))
 
         gevent.joinall(slaver)
+    '''
 
     print "crawler has crawled %d people ,it cost %s" % (count,time.time()-start)
