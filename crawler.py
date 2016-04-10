@@ -108,8 +108,11 @@ class Zhihu_Crawler():
         self.user_employment_extra=self.process_xpath_source(tree.xpath("//span[@class='position item']/@title"))
         self.user_education_school=self.process_xpath_source(tree.xpath("//span[@class='education item']/@title"))
         self.user_education_subject=self.process_xpath_source(tree.xpath("//span[@class='education-extra item']/@title"))
-        self.user_followees=tree.xpath("//div[@class='zu-main-sidebar']//strong")[0].text
-        self.user_followers=tree.xpath("//div[@class='zu-main-sidebar']//strong")[1].text
+        try:
+            self.user_followees=tree.xpath("//div[@class='zu-main-sidebar']//strong")[0].text
+            self.user_followers=tree.xpath("//div[@class='zu-main-sidebar']//strong")[1].text
+        except:
+            return
 
         self.user_be_agreed=self.process_xpath_source(tree.xpath("//span[@class='zm-profile-header-user-agree']/strong/text()"))
         self.user_be_thanked=self.process_xpath_source(tree.xpath("//span[@class='zm-profile-header-user-thanks']/strong/text()"))

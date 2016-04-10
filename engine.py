@@ -12,6 +12,7 @@ import redis
 import crawler
 import time
 from multiprocessing.dummy import Pool
+import multiprocessing
 
 
 red_queue="test_the_url_queue"
