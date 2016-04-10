@@ -17,7 +17,7 @@ from multiprocessing.dummy import Pool
 red_queue="test_the_url_queue"
 red_crawled_set="test_url_has_crawled"
 
-process_pool=Pool(2)
+process_pool=Pool(multiprocessing.cpu_count()*2)
 
 
 
@@ -47,7 +47,7 @@ def gevent_worker(option):
 
 def process_worker(option):
     jobs=[]
-    for i in range(10):
+    for i in range(50):
         jobs.append(gevent.spawn(gevent_worker,option))
     gevent.joinall()
 
@@ -78,27 +78,8 @@ if __name__=="__main__":
     red.lpush(red_queue,"https://www.zhihu.com/people/gaoming623")
     url=red.lpop(red_queue)
     create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/mileijun")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/excited-vczh")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/mm.lou")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/jean-grean")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/minmemory")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/jin-si-ling-70")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
-    red.lpush(red_queue,"https://www.zhihu.com/people/xiexiaolong")
-    url=red.lpop(red_queue)
-    create_new_slave(url,option=option)
+    for i in range(50):
+        gevent_worker(option=option)
 
     process_pool.map_async(process_worker,option)
     process_pool.close()

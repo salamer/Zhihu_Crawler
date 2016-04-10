@@ -63,7 +63,6 @@ class Zhihu_Crawler():
 
         content=r.text
 
-        print added_followee_url
 
         if r.status_code==200:
             self.parse_user_profile(content)
