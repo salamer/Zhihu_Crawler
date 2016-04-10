@@ -40,14 +40,14 @@ class Zhihu_Crawler():
 
 
         #cookie
-        self.cookies={"z_c0":'"QUFBQUpVVXlBQUFYQUFBQVlRSlZUZWdmTGxjZGQwcTFzMnppNkEwZ1hIencwbEVvY3g5aThBPT0=|1460048614|9f8703140463dd604d6c3ab5739600f38260639e"',
-                "unlock_ticket":'"QUFBQUpVVXlBQUFYQUFBQVlRSlZUZkdaQmxmTHdaSHdiSnNmMEVROTZVYnZ4MDQ5YVFTSDR3PT0=|1460048614|160bdd2e71c745ece7442bdf564babea39160506"',
-                "login":'"MmNiNzhjYjUwNmQ1NDYxMmJhZTY2ZWI4ZjhkZmUxYzk=|1460048614|e4bc34730f8127c3e59123f6386bcb10c741d81d"',
+        self.cookies={"z_c0":'"QUZDQUp3czV3QWtYQUFBQVlRSlZUZkx3TVZmaFBMWlp2em04Ym1PN01BMldtRktscHRMOVVBPT0=|1460298735|34e9183179a0555057f1cfcc2c8f63660a2f4fc5"',
+                "unlock_ticket":'QUZDQUp3czV3QWtYQUFBQVlRSlZUZnBxQ2xmSWNXX3NuVXo3SVJleUM5Uy1BLUpEdXJEcEpBPT0',
+                "login":'"ZjliNTRhNzViMDQ2NDMzY2FmZTczNjNjZDA4N2U0NGU=|1460298735|b1048ba322e44c391aa15306198503eab8b28f26"',
                 "n_c":"1",
-                "q_c1":"f8482709919647889bcef40c15cd08ee|1460048593000|1460048593000",
-                "l_cap_id":'"NjMwZTFjY2Q2MTM2NDFhYmFiZGU3M2IxOGM4MDdhMTE=|1460048593|31afee564365fbb9bb89d9a58b8ae4c7ef052608"',
-                "d_c0":'"AHAA9ozGuwmPToJX_XSZ7l2aeKFKaTKYt80=|1460000226"',
-                "cap_id":'"ZTcwNjIzYzY5NTQ5NDA2MDhmMzM3ZGRjMzk1ZGUyNDg=|1460048593|41eb3ac15a4f511323d65440be04c4c2b27cb3c7"'}
+                "q_c1":"a15d5ad71c734d5b9ab4b1eddacea368|1460298703000|1460298703000",
+                "l_cap_id":'"YjMzMGNjMTUxMWIzNGZiMWI2OWI2ZGI1ZDM5NTAzZTQ=|1460298703|dd2d5dec11620d64a65ea057bd852f10124a283f"',
+                "d_c0":'"AJAAgETzqAmPTgxl_8gbpkFvESCkSwIZMoU=|1458736882"',
+                "cap_id":'"MmI2OTJiNWVkZGFmNGNmZDk0NDY2YTBlODI1ZjgyMWQ=|1460298703|b185f46c6887417393049379e47d961708cfdac7"'}
 
     def send_request(self):
         '''
