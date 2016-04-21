@@ -11,12 +11,12 @@ import gevent
 import redis
 import crawler
 import time
-from multiprocessing.dummy import Pool
+from multiprocessing import Pool
 import multiprocessing
 
 
-red_queue="test_the_url_queue"
-red_crawled_set="test_url_has_crawled"
+red_queue="the_test_the_url_queue"
+red_crawled_set="the_test_url_has_crawled"
 
 process_pool=Pool(multiprocessing.cpu_count()*2)
 

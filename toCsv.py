@@ -31,7 +31,8 @@ def f():
                     '所在地',
                     '性别',
                     '相关说明',
-                    '个性签名'])
+                    '个性签名',
+                    'url'])
         for user in con.find():
             csv_writer.writerow([
                 user['user_name'],
