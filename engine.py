@@ -5,7 +5,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 import gevent.monkey
-gevent.monkey.patch_all()
+gevent.monkey.patch_socket()
 
 import gevent
 import redis
@@ -14,7 +14,7 @@ import time
 from multiprocessing import Pool
 import multiprocessing
 
-from red_filter import red,red_queue
+from red_filter import red, red_queue
 # wrap the class method
 
 
@@ -36,7 +36,7 @@ def process_worker(option):
     jobs = []
     for i in range(50):
         jobs.append(gevent.spawn(gevent_worker, option))
-    gevent.joinall()
+    gevent.joinall(jobs)
 
 
 if __name__ == "__main__":
@@ -65,9 +65,10 @@ if __name__ == "__main__":
     url = red.lpop(red_queue)
     create_new_slave(url, option=option)
     for i in range(50):
-        url=red.lpop(red_queue)
+        url = red.lpop(red_queue)
         create_new_slave(url, option=option)
-    process_pool=Pool(multiprocessing.cpu_count()*2)
+
+    process_pool = Pool(multiprocessing.cpu_count() * 2)
     process_pool.map_async(process_worker, option)
     process_pool.close()
     process_pool.join()
