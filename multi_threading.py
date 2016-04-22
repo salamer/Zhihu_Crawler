@@ -5,35 +5,17 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-
-
 import redis
-import crawler
+import thread_crawler
 import time
 from multiprocessing.dummy import Pool
-
-threading_pool=Pool(50)
-
-red_queue = "the_test_the_url_queue"
-red_crawled_set = "the_test_url_has_crawled"
+from red_filter import red,red_queue
 
 
-# connect to redis server
-red = redis.Redis(host='localhost', port=6379, db=1)
-
-def re_crawl_url(url):
-    red.lpush(red_queue, url)
-
-
-def check_url(url):
-    if red.sadd(red_crawled_set, url):
-        red.lpush(red_queue, url)
-
-# wrap the class method
 
 
 def create_new_slave(url, option):
-    new_slave = crawler.Zhihu_Crawler(url, option)
+    new_slave = thread_crawler.Zhihu_Crawler(url, option)
     new_slave.send_request()
     return "ok"
 
@@ -73,7 +55,8 @@ if __name__ == "__main__":
         url=red.lpop(red_queue)
         create_new_slave(url, option=option)
 
-    threading_pool.map_async(process_worker, option)
+    threading_pool=Pool(50)
+    threading_pool.map_async(thread_worker, option)
     threading_pool.close()
     threading_pool.join()
 
