@@ -7,8 +7,8 @@ sys.setdefaultencoding("utf-8")
 
 import requests
 from lxml import html
-from db import Zhihu_User_Profile
-from red_filter import check_url, re_crawl_url
+from thread_db import Zhihu_User_Profile
+from thread_red import check_url, re_crawl_url
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)

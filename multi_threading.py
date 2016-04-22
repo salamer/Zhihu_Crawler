@@ -9,7 +9,7 @@ import redis
 import thread_crawler
 import time
 from multiprocessing.dummy import Pool
-from red_filter import red,red_queue
+from thread_red import red,red_queue
 
 
 
