@@ -14,25 +14,7 @@ import time
 from multiprocessing import Pool
 import multiprocessing
 
-
-red_queue = "the_test_the_url_queue"
-red_crawled_set = "the_test_url_has_crawled"
-
-process_pool = Pool(multiprocessing.cpu_count())
-
-
-# connect to redis server
-red = redis.Redis(host='localhost', port=6379, db=1)
-
-
-def re_crawl_url(url):
-    red.lpush(red_queue, url)
-
-
-def check_url(url):
-    if red.sadd(red_crawled_set, url):
-        red.lpush(red_queue, url)
-
+from red_filter import red,red_queue
 # wrap the class method
 
 
@@ -85,7 +67,7 @@ if __name__ == "__main__":
     for i in range(50):
         url=red.lpop(red_queue)
         create_new_slave(url, option=option)
-
+    process_pool=Pool(multiprocessing.cpu_count()*2)
     process_pool.map_async(process_worker, option)
     process_pool.close()
     process_pool.join()

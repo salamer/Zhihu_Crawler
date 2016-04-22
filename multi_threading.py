@@ -55,7 +55,7 @@ if __name__ == "__main__":
         url=red.lpop(red_queue)
         create_new_slave(url, option=option)
 
-    threading_pool=Pool(50)
+    threading_pool=Pool(120)
     threading_pool.map_async(thread_worker, option)
     threading_pool.close()
     threading_pool.join()
