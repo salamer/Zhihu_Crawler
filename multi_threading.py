@@ -4,26 +4,22 @@
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-import gevent.monkey
-gevent.monkey.patch_all()
 
-import gevent
+
+
 import redis
 import crawler
 import time
-from multiprocessing import Pool
-import multiprocessing
+from multiprocessing.dummy import Pool
 
+threading_pool=Pool(50)
 
 red_queue = "the_test_the_url_queue"
 red_crawled_set = "the_test_url_has_crawled"
 
-process_pool = Pool(multiprocessing.cpu_count())
-
 
 # connect to redis server
 red = redis.Redis(host='localhost', port=6379, db=1)
-
 
 def re_crawl_url(url):
     red.lpush(red_queue, url)
@@ -41,21 +37,12 @@ def create_new_slave(url, option):
     new_slave.send_request()
     return "ok"
 
-
-def gevent_worker(option):
+def thread_worker(option):
     while True:
         url = red.lpop(red_queue)
         if not url:
             break
         create_new_slave(url, option)
-
-
-def process_worker(option):
-    jobs = []
-    for i in range(50):
-        jobs.append(gevent.spawn(gevent_worker, option))
-    gevent.joinall()
-
 
 if __name__ == "__main__":
 
@@ -82,35 +69,12 @@ if __name__ == "__main__":
     red.lpush(red_queue, "https://www.zhihu.com/people/gaoming623")
     url = red.lpop(red_queue)
     create_new_slave(url, option=option)
-    for i in range(50):
+    for i in range(20):
         url=red.lpop(red_queue)
         create_new_slave(url, option=option)
 
-    process_pool.map_async(process_worker, option)
-    process_pool.close()
-    process_pool.join()
-
-    '''
-    while(True):
-
-        url_list=[]
-
-        for i in range(50):
-            url=red.lpop(red_queue)
-            if url:
-                url_list.append(url)
-                count+=1
-
-        if not url_list:
-            break
-
-        #use gevent for asyn way crawling
-
-        slaver=[]
-        for url in url_list:
-            slaver.append(gevent.spawn(create_new_slave,url,option))
-
-        gevent.joinall(slaver)
-    '''
+    threading_pool.map_async(process_worker, option)
+    threading_pool.close()
+    threading_pool.join()
 
     print "crawler has crawled %d people ,it cost %s" % (count, time.time() - start)
